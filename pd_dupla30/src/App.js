@@ -31,6 +31,12 @@ const initialTasksDAta = [
     end: new Date(2022, 4, 10) 
   }, 
   { 
+    name: 'tarefa 4 - 4', 
+    weight: 4, 
+    start: new Date(2022, 4, 8), 
+    end: new Date(2022, 4, 11) 
+  }, 
+  { 
     name: 'tarefa 3 - 5', 
     weight: 5, 
     start: new Date(2022, 4, 12), 
@@ -42,29 +48,40 @@ function App() {
   const [auxMap, setAuxMap] = useState({}); 
   const [newTaskData,setNewTaskData] = useState(initialTaskData);
   const [lastItems, setLastItems] = useState({}); 
-  const [totalResult, setTotalResult] = useState(null); 
-  const [resultTasks,setResultTasks] = useState([]);
+  const [totalResult, setTotalResult] = useState([]); 
   const [sortedTasks,setSortedTasks] = useState(initialTasksDAta);
   const [tasks,setTasks] = useState(initialTasksDAta); 
  
-  const solve = index => {
+  const solve = (index, items) => {
     if(index === -1) { 
-      return 0; 
+      return [0,items]; 
     } 
      
     if(auxMap[index]) { 
-      return auxMap[index]; 
+      return [auxMap[index], items]; 
     } 
-    const res = Math.max(tasks[index]?.weight + solve(lastItems[index]), solve(index-1)); 
-    setAuxMap(prev => ({ ...prev, [index]: res })); 
+    let get = [0,[...items, tasks[index]]];
+    for(const item in lastItems[index]) {
+      const aux = solve(item, [...items, tasks[index]]);
+      if(aux[0] > get[0])  get = aux;
+    }
+    const notGet = solve(index-1, items);
+    let res;
+    if(tasks[index]?.weight + get[0] > notGet[0]) {
+      res = [tasks[index]?.weight + get[0], get[1]]; 
+    } else {
+      res = notGet; 
+    }
+    setAuxMap(prev => ({ ...prev, [index]: res[0] })); 
     return res; 
   } 
  
   const getLastItem = index => { 
+    let items = [];
     for (var i = index; i >= 0; i--) { 
-      if(tasks[i].end <= tasks[index].start) return i; 
+      if(tasks[i].end <= tasks[index].start) items.push(i); 
    } 
-   return -1; 
+   return items; 
   } 
  
   useEffect(() => {
@@ -98,12 +115,20 @@ function App() {
     </div>
     <Gantt tasks={sortedTasks} />
     <Button type="primary"  onClick={() => {
-      setTotalResult(solve(tasks.length-1));
-
+      setTotalResult(solve(tasks.length-1, []));
+      setAuxMap({});
     }}> Calcular</Button>
-    <label>{totalResult}</label>
-    {resultTasks.length ? (
-      <Gantt tasks={resultTasks} />
+    <label>{totalResult[0]}</label>
+    {totalResult[1]?.length ? (
+      <Gantt tasks={totalResult[1].sort((a,b) => {
+        if (a.end > b.end) {
+          return 1;
+        }
+        if (a.end < b.end) {
+          return -1;
+        }
+        return 0;
+      })} />
     ) : null}
     </> 
   ); 
