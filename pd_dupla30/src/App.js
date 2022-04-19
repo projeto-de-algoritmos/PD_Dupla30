@@ -12,18 +12,30 @@ const initialTaskData = {
 }
 
 const tasksInputMap = [
-  { key: 'name', label: 'Nome' },
+  { key: 'name', label: 'Nome da matéria' },
   { key: 'weight', label: 'Peso' },
-  { key: 'start', label: 'Dia de inicio' },
-  { key: 'end', label: 'Dia do fim' }
+  { key: 'start', label: 'inicio' },
+  { key: 'end', label: 'fim' }
 ]
 
 const initialTasksDAta = [
   {
-    name: 'Organizar agenda',
+    name: 'C 1 - 3',
     weight: 3,
     start: new Date(2022, 4, 8),
     end: new Date(2022, 4, 9)
+  },
+  {
+    name: 'Física - 2',
+    weight: 2,
+    start: new Date(2022, 4, 9),
+    end: new Date(2022, 4, 12)
+  },
+  {
+    name: 'APC - 4',
+    weight: 4,
+    start: new Date(2022, 4, 9),
+    end: new Date(2022, 4, 11)
   }
 ]
 
@@ -84,7 +96,11 @@ function App() {
 
   return (
     <>
-
+    <div className='content'>
+      <h1>Bem vindo ao otimizador de grade!</h1>
+      <h2>Cadastre suas turmas com o peso que acredita que elas tem e clique em calcular que mostramos o resultado com o peso máximo.
+      </h2>
+    </div>
       <div className='top-content'>
         {tasksInputMap.map(task => (
           <div className='input-content'>
