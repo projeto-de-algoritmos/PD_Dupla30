@@ -1,4 +1,4 @@
-# MTG Searcher
+# Otimizador de grade
 
 **Número da Lista**: 5<br>
 **Conteúdo da Disciplina**: Programação dinâmica<br>
